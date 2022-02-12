@@ -3,6 +3,7 @@
     package="com.saharnollily.android.taskappkmm.android">
 
     <application
+        android:name=".TaskApp"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
