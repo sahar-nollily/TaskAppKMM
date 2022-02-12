@@ -3,6 +3,8 @@ package com.saharnollily.android.taskappkmm.android.di
 import android.content.Context
 import com.saharnollily.android.taskappkmm.datasource.database.DatabaseDriverFactory
 import com.saharnollily.android.taskappkmm.datasource.database.DatabaseFactory
+import com.saharnollily.android.taskappkmm.datasource.database.task.TaskDao
+import com.saharnollily.android.taskappkmm.datasource.database.task.TaskDaoImp
 import com.saharnollily.taskapp.database.TaskDatabase
 import dagger.Module
 import dagger.Provides
@@ -22,4 +24,9 @@ object DatabaseModule {
     }
 
 
+    @Singleton
+    @Provides
+    fun provideTaskDao(taskDatabase: TaskDatabase): TaskDao{
+        return TaskDaoImp(taskDatabase = taskDatabase)
+    }
 }

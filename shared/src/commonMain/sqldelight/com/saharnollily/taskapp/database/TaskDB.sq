@@ -1,6 +1,6 @@
 CREATE TABLE  task_Entity(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL
+    title TEXT NOT NULL UNIQUE
 );
 
 selectAll:
@@ -8,7 +8,7 @@ SELECT *
 FROM task_Entity;
 
 insertTask:
-INSERT OR REPLACE
+INSERT
 INTO task_Entity (
     id,
     title
