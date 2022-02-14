@@ -5,7 +5,6 @@ import com.saharnollily.android.taskappkmm.domain.models.Task
 import com.saharnollily.android.taskappkmm.util.CommonFlow
 import com.saharnollily.android.taskappkmm.util.DataState
 import com.saharnollily.android.taskappkmm.util.asCommonFlow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetTasks(
@@ -17,14 +16,13 @@ class GetTasks(
             emit(DataState.loading())
 
             val taskList = taskDao.getTasks()
-            if(taskList.isNullOrEmpty()){
+            if (taskList.isNullOrEmpty()) {
                 emit(DataState.error(message = "No Data"))
-            }else{
+            } else {
                 emit(DataState.data(data = taskList))
-
             }
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(DataState.error(message = e.message ?: "Unknown Error"))
 
         }

@@ -9,7 +9,7 @@ fun Task_Entity.toTask(): Task {
     )
 }
 
-fun List<Task_Entity>.toTaskList(): List<Task>{
+fun List<Task_Entity>.toTaskList(): List<Task> {
     return map {
         it.toTask()
     }

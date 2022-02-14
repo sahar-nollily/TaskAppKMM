@@ -6,7 +6,7 @@ import com.saharnollily.taskapp.database.TaskDatabase
 
 class TaskDaoImp(
     private val taskDatabase: TaskDatabase
-): TaskDao {
+) : TaskDao {
 
     val queries = taskDatabase.taskDBQueries
     override fun getTasks(): List<Task> {

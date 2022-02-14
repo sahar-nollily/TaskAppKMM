@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.onEach
 
 fun <T> Flow<T>.asCommonFlow(): CommonFlow<T> = CommonFlow(this)
 
-class CommonFlow<T>(private val origin: Flow<T>): Flow<T> by origin {
+class CommonFlow<T>(private val origin: Flow<T>) : Flow<T> by origin {
     fun collectFlow(
         coroutineScope: CoroutineScope? = null,
         callback: (T) -> Unit
-    ){
+    ) {
         onEach {
             callback(it)
         }.launchIn(coroutineScope ?: CoroutineScope(Dispatchers.Main))

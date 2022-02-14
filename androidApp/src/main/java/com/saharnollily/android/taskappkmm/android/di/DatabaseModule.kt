@@ -19,14 +19,14 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideTaskDatabase(@ApplicationContext context: Context): TaskDatabase{
+    fun provideTaskDatabase(@ApplicationContext context: Context): TaskDatabase {
         return DatabaseFactory(DatabaseDriverFactory(context)).createDatabase()
     }
 
 
     @Singleton
     @Provides
-    fun provideTaskDao(taskDatabase: TaskDatabase): TaskDao{
+    fun provideTaskDao(taskDatabase: TaskDatabase): TaskDao {
         return TaskDaoImp(taskDatabase = taskDatabase)
     }
 }

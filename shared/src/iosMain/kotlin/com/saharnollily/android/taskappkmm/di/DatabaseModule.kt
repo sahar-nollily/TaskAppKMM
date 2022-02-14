@@ -6,10 +6,10 @@ import com.saharnollily.android.taskappkmm.datasource.database.task.TaskDao
 import com.saharnollily.android.taskappkmm.datasource.database.task.TaskDaoImp
 import com.saharnollily.taskapp.database.TaskDatabase
 
-class DatabaseModule{
+class DatabaseModule {
 
-    private val databaseDriverFactory: DatabaseDriverFactory by lazy {DatabaseDriverFactory()}
-    val taskDatabase: TaskDatabase by lazy{
+    private val databaseDriverFactory: DatabaseDriverFactory by lazy { DatabaseDriverFactory() }
+    val taskDatabase: TaskDatabase by lazy {
         DatabaseFactory(databaseDriverFactory = databaseDriverFactory).createDatabase()
     }
     val taskDao: TaskDao by lazy {
