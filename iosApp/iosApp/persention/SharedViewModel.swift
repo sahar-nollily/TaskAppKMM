@@ -12,21 +12,13 @@ import Combine
 
 class SharedViewModel: ObservableObject{
     
-    enum State{
-    case Error(message: String)
-    case Loading
-    case DoNothing
-    }
-    
-    var currentState = State.Loading
-
     private let databaseModule = DatabaseModule()
     private var usecaseModule : UsecaseModule
     private let addTask: AddTask
     private let getTask: GetTasks
     
-    @Published var taskListState: TaskListState = TaskListState()
-    @Published var addTaskState: AddTaskState = AddTaskState()
+    @Published var taskListState = TaskListState()
+    @Published var addTaskState = AddTaskState()
     
     init(){
         self.usecaseModule = UsecaseModule(taskDao: databaseModule.taskDao)
@@ -42,21 +34,26 @@ class SharedViewModel: ObservableObject{
             callback: { dataState in
                 switch dataState != nil {
                 case dataState?.isLoading:
-                    self.addTaskState.isLoading = dataState?.isLoading ?? false
+                    self.addTaskState = AddTaskState(isLoading: dataState?.isLoading ?? false,
+                                                  error: "",
+                                                  data: false)
                 case dataState?.data != nil :
-                    self.addTaskState.data = true
+                    self.addTaskState = AddTaskState(isLoading: false,
+                                                  error: "",
+                                                  data: true)
                     self.appendData(task: task)
-                    self.currentState = State.DoNothing
                 case dataState?.message != nil:
-                    self.currentState = State.Error(message: dataState?.message ?? "")
-                    self.addTaskState.error = dataState?.message ?? ""
+                    self.addTaskState = AddTaskState(isLoading: false,
+                                                        error: dataState?.message ?? "",
+                                                        data: false)
                     print("SahatTest",dataState?.message ?? "")
-                default: self.currentState = State.DoNothing
+                default: return
                 }
             }
         )
         
     }
+    
     
     func getTasks(){
         self.getTask.execute().collectFlow(
@@ -64,13 +61,18 @@ class SharedViewModel: ObservableObject{
             callback: { dataState in
                 switch dataState != nil {
                 case dataState?.isLoading:
-                    self.currentState = State.Loading
+                    self.taskListState = TaskListState(isLoading: dataState?.isLoading ?? false,
+                                                       error: "",
+                                                       data: [Task]())
                 case dataState?.data != nil:
-                    self.taskListState.data = dataState?.data as! [Task]
-                    self.currentState = State.DoNothing
+                    self.taskListState = TaskListState(isLoading: false,
+                                                       error: "",
+                                                       data: dataState?.data as! [Task])
                 case dataState?.message != nil:
-                    self.currentState = State.Error(message: dataState?.message ?? "")
-                default: self.currentState = State.DoNothing
+                    self.taskListState = TaskListState(isLoading: false,
+                                                       error: dataState?.message ?? "",
+                                                       data: [Task]())
+                default: return
                 }
                 
             })

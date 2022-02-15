@@ -9,7 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.saharnollily.android.taskappkmm.domain.models.Task
 import com.saharnollily.android.taskappkmm.domain.usecase.AddTask
 import com.saharnollily.android.taskappkmm.domain.usecase.GetTasks
-import com.saharnollily.android.taskappkmm.persentaion.TaskState
+import com.saharnollily.android.taskappkmm.persentaion.AddTaskState
+import com.saharnollily.android.taskappkmm.persentaion.TaskListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,13 +22,13 @@ class HomeViewModel @Inject constructor(
     private val getTasks: GetTasks
 ) : ViewModel() {
 
-    private val _state: MutableState<TaskState<List<Task>>> = mutableStateOf(TaskState())
-    private val _addState: MutableState<TaskState<Boolean>> = mutableStateOf(TaskState())
+    private val _state: MutableState<TaskListState> = mutableStateOf(TaskListState())
+    private val _addState: MutableState<AddTaskState> = mutableStateOf(AddTaskState())
 
 
-    val addState: State<TaskState<Boolean>>
+    val addState: State<AddTaskState>
         get() = _addState
-    val state: State<TaskState<List<Task>>>
+    val state: State<TaskListState>
         get() = _state
 
     init {
@@ -38,18 +39,18 @@ class HomeViewModel @Inject constructor(
         addTask.execute(task).onEach {dataState ->
             when {
                 dataState.isLoading -> {
-                    _addState.value = TaskState(isLoading = dataState.isLoading)
+                    _addState.value = AddTaskState(isLoading = dataState.isLoading)
                     Log.d("SaharTest", "addTask: loading ${dataState.isLoading} ")
                 }
                 dataState.data != null -> {
-                    _addState.value = TaskState(data = dataState.data ?: false)
+                    _addState.value = AddTaskState(data = dataState.data ?: false)
                     appendData(task)
                     Log.d("SaharTest", "addTask: data ${dataState.data} ")
 
                 }
 
                 dataState.message != null -> {
-                    _addState.value = TaskState(error = dataState.message ?: "")
+                    _addState.value = AddTaskState(error = dataState.message ?: "")
                     Log.d("SaharTest", "addTask: message ${dataState.message} ")
 
                 }
@@ -62,16 +63,16 @@ class HomeViewModel @Inject constructor(
         getTasks.execute().onEach {dataState ->
             when {
                 dataState.isLoading -> {
-                    _state.value = TaskState(isLoading = dataState.isLoading)
+                    _state.value = TaskListState(isLoading = dataState.isLoading)
                     Log.d("SaharTest", "getTasks: loading ${dataState.isLoading} ")
                 }
                 dataState.data != null -> {
-                    _state.value = TaskState(data = dataState.data ?: emptyList())
+                    _state.value = TaskListState(data = dataState.data ?: emptyList())
                     Log.d("SaharTest", "getTasks: data ${dataState.data} ")
                 }
 
                 dataState.message != null -> {
-                    _state.value = TaskState(error = dataState.message ?: "")
+                    _state.value = TaskListState(error = dataState.message ?: "")
                     Log.d("SaharTest", "getTasks: message ${dataState.message}")
 
                 }
@@ -81,9 +82,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun appendData(task: Task) {
-        val taskList = _state.value.data?.toMutableList() ?: mutableListOf()
+        val taskList = _state.value.data.toMutableList()
         taskList.add(task)
-        _state.value = TaskState(data = taskList)
+        _state.value = TaskListState(data = taskList)
 
     }
 

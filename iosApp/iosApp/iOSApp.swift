@@ -5,41 +5,31 @@ import shared
 struct iOSApp: App {
     
     @ObservedObject var sharedViewModel: SharedViewModel = SharedViewModel()
+
         
 	var body: some Scene {
 		WindowGroup {
+            
+            if(self.sharedViewModel.addTaskState.error != ""){
+                getErrorButton(meesage: self.sharedViewModel.addTaskState.error)
+            }
 
             AddTaskScreen(onAddNewTask:{ (newTask: Task) in
                 self.sharedViewModel.addTask(task: newTask)
             })
             
-            switch self.sharedViewModel.currentState {
-            case .Error(let message):
-                OnError(message: message)
-                progressView.hidden()
-            case .Loading:
-                progressView
-            case .DoNothing:
-                progressView.hidden()
-            }
             
             TaskListScreen(taskListState: self.sharedViewModel.taskListState)
+
 		}
 	}
     
-    var progressView: some View{
-        ProgressView("Loading ...")
-    }
     
-    struct OnError: View {
-        private var message: String?
-        init(
-            message: String
-        ){
-            self.message = message
-        }
-      var body: some View {
-          Text(self.message!)
-      }
+    @ViewBuilder private func getErrorButton(meesage: String) -> some View {
+        Text("* \(meesage)")
+            .padding(.top, 10)
+            .foregroundColor(.red)
+        
     }
+
 }

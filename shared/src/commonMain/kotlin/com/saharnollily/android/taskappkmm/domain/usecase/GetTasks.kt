@@ -14,13 +14,8 @@ class GetTasks(
     fun execute(): CommonFlow<DataState<List<Task>>> = flow {
         try {
             emit(DataState.loading())
-
             val taskList = taskDao.getTasks()
-            if (taskList.isNullOrEmpty()) {
-                emit(DataState.error(message = "No Data"))
-            } else {
-                emit(DataState.data(data = taskList))
-            }
+            emit(DataState.data(data = taskList))
 
         } catch (e: Exception) {
             emit(DataState.error(message = e.message ?: "Unknown Error"))
